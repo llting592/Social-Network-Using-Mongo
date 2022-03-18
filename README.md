@@ -1,18 +1,13 @@
-const express = require('express');
-const db = require('./config/connection');
-const routes = require('./routes');
+## Social Network Using Mongo
 
-const cwd = process.cwd();
+## User Story
 
-const PORT = process.env.port || 3001;
-const app = express();
+```md
+AS A social media startup
+I WANT an API for my social network that uses a NoSQL database
+SO THAT my website can handle large amounts of unstructured data
+```
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(routes);
+## Link To Demo
 
-db.once('open', () => {
-  app.listen(PORT, () => {
-    console.log(`API server for ${activity} running on port ${PORT}!`);
-  });
-});
+[Demo](https://drive.google.com/file/d/1h5xQefOhAXRKtZReQZ5IZtDxv6l8TlPf/view)
