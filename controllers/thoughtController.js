@@ -2,7 +2,7 @@ const { User, Thought, Reaction } = require('../models');
 
 const thoughtController = {
 
-    // GET /api/thoughts
+    // GET all thoughts
     getThoughts(req, res) {
         Thought.find({})
         .populate({ path: 'reactions', select: '-__v' })
@@ -14,7 +14,7 @@ const thoughtController = {
         })
     },
 
-    // GET /api/thoughts/:id
+    // GET thought by ID
     getThoughtById({ params }, res) {
         Thought.findOne({ _id: params.id })
         .populate({ path: 'reactions', select: '-__v' })
@@ -32,7 +32,7 @@ const thoughtController = {
         });
     },
 
-    // POST /api/thoughts
+    //Create thought
   
     createThought({ body }, res) {
         Thought.create(body)
@@ -54,7 +54,7 @@ const thoughtController = {
         .catch(err => res.status(400).json(err));
     },
 
-    // PUT /api/thoughts/:id
+    //update thought
     
     updateThought({ params, body }, res) {
         Thought.findOneAndUpdate(
@@ -73,16 +73,14 @@ const thoughtController = {
     },
 
 
-    // DELETE /api/thoughts/:id
+    //Delete thought
     deleteThought({ params }, res) {
-        // delete the thought
         Thought.findOneAndDelete({ _id: params.id })
         .then(ThoughtData => {
             if (!ThoughtData) {
                 res.status(404).json({ message: 'No thought found with this id'});
                 return;
             }
-            // delete the reference to deleted thought in user's thought array
             User.findOneAndUpdate(
                 { username: ThoughtData.username },
                 { $pull: { thoughts: params.id } }
@@ -95,7 +93,7 @@ const thoughtController = {
         .catch(err => res.status(500).json(err));
     },
 
-    // POST /api/thoughts/:id/reactions
+    //Create reaction to thoughts
     addReaction({ params, body }, res) {
         Thought.findOneAndUpdate(
             { _id: params.thoughtId },
@@ -112,8 +110,7 @@ const thoughtController = {
         .catch(err => res.status(500).json(err));
     },
 
-    // DELETE /api/thoughts/:id/reactions
-    
+    //Delete reaction
     deleteReaction({ params, body }, res) {
         Thought.findOneAndUpdate(
             { _id: params.thoughtId },

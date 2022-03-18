@@ -67,10 +67,10 @@ const userController = {
             .catch(err => res.status(400).json(err));
     },
 
-    //Add friends
+    //Add friends- uses by adding two IDs together (one is userId and one is friendId)
     addFriend({ params }, res) {
         User.findOneAndUpdate(
-            { _id: params.id },
+            { _id: params.userId },
             { $push: { friends: params.friendId } },
             { new: true, runValidators: true }
         )
@@ -79,10 +79,10 @@ const userController = {
                 res.status(404).json({ message: 'No user found with this ID' });
                 return;
             }
-            // add userId to friendId's friend list
+            // add userId to friendId
             User.findOneAndUpdate(
                 { _id: params.friendId },
-                { $push: { friends: params.id } },
+                { $push: { friends: params.userId } },
                 { new: true, runValidators: true }
             )
             .then(UserData2 => {
@@ -97,23 +97,23 @@ const userController = {
         .catch(err => res.json(err));
     },
 
-    // Delete friend
+    //Delete friend
     deleteFriend({ params }, res) {
         
         User.findOneAndUpdate(
-            { _id: params.id },
+            { _id: params.userId },
             { $pull: { friends: params.friendId } },
             { new: true, runValidators: true }
         )
         .then(UserData => {
-            if (UserData) {
+            if (!UserData) {
                 res.status(404).json({ message: 'No user found with this id' });
                 return;
             }
             
             User.findOneAndUpdate(
                 { _id: params.friendId },
-                { $pull: { friends: params.id } },
+                { $pull: { friends: params.userId } },
                 { new: true, runValidators: true }
             )
             .then(UserData2 => {
