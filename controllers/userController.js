@@ -4,8 +4,7 @@ const userController = {
 
     //get all users
     getUsers(req, res) {
-        User.find({})
-        .select('-__v')
+        User.find()
         .then(UserData => res.json(UserData))
         .catch(err => {
             console.log(err);
@@ -17,8 +16,8 @@ const userController = {
     getUserById({ params }, res) {
         User.findOne({ _id: params.id })
         .populate([
-            { path: 'thoughts', select: "-__v" },
-            { path: 'friends', select: "-__v" }
+            { path: 'thoughts'},
+            { path: 'friends'}
         ])
         .select('-__v')
         .then(UserData => {
